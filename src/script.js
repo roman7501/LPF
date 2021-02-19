@@ -25,7 +25,7 @@ const scene = new THREE.Scene();
  */
 const parameters = {
   radiusTriangle: 1,
-  heightTriangle: 1.789,
+  heightTriangle: 1.788,
   radialSegmentsTriangle: 3,
   colorPointLight: "#4842f5",
 };
