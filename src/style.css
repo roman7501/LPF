@@ -1,0 +1,42 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.hour {
+  font-family: freight-big-pro, serif;
+  font-size: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  color: #3644c2;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+#play {
+  font-family: itc-avant-garde-gothic-pro, sans-serif;
+  font-weight: 300;
+  display: block;
+  font-size: 30px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -120%);
+  color: white;
+  z-index: 30;
+  text-decoration: none;
+}
