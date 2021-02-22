@@ -5,6 +5,7 @@
 
 html,
 body {
+  font-family: itc-avant-garde-gothic-pro, sans-serif;
 }
 
 .webgl {
@@ -21,45 +22,49 @@ body {
 } */
 
 .container {
-  top: 0;
-  right: 0;
+  position: absolute;
+  top: 30vh;
+  right: 200px;
   bottom: 0;
-  left: 0;
   display: flex;
-  scroll-snap-type: x mandatory;
-  overflow-x: auto;
+  flex-direction: column;
 }
 
 .time__wrapper {
-  scroll-snap-align: start;
   position: relative;
-  justify-content: center;
-  min-width: 100vw;
   display: flex;
-  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+  opacity: 0.4;
+  font-size: 24px;
+}
+
+.time__wrapper:hover {
+  opacity: 1;
+}
+
+.time__wrapper:hover #play {
+  opacity: 1;
 }
 
 .hour {
   margin-top: 0;
-  font-family: freight-big-pro, serif;
-  font-size: 600px;
-  color: #3644c2;
+  color: #fff;
   pointer-events: none;
-  opacity: 0.3;
+  margin-right: 64px;
 }
 
 #play {
-  position: absolute;
-  top: 96%;
-  font-family: itc-avant-garde-gothic-pro, sans-serif;
+  opacity: 0.15;
   font-weight: 300;
   display: block;
-  font-size: 30px;
   color: white;
   text-decoration: none;
+  transition: opacity 0.5s;
 }
 
 button {
+  display: none;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -87,16 +92,33 @@ button {
 }
 
 .desc {
-  width: 100%;
-  text-align: center;
+  width: 40%;
   position: fixed;
-  bottom: 120px;
-  left: 40px;
+  bottom: 100px;
+  right: 80px;
   color: white;
-  opacity: 0;
-  font-family: itc-avant-garde-gothic-pro, sans-serif;
-  font-weight: 300;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #b8bffd;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  text-align-last: right;
+}
+
+.title {
+  position: fixed;
+  top: 80px;
+  left: 40px;
+  color: #fff;
+  font-size: 24px;
+  opacity: 0.4;
+}
+
+.date {
+  position: fixed;
+  bottom: 80px;
+  left: 40px;
+  color: #111;
+}
+
+.date p {
+  margin-bottom: 12px;
 }
