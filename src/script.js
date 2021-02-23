@@ -9,30 +9,48 @@ import * as dat from "dat.gui";
 import { TextureLoader } from "three";
 
 /**
- * Slider
+ * Countdown
+ */
+const listDates = [
+  "Apr 30 2021",
+  "June 25 2021",
+  "Aug 27 2021",
+  "Oct 29 2021",
+  "Dec 24 2021",
+  "Feb 24 2022",
+  "Apr 29 2022",
+];
+const dateNow = new Date();
+
+const date1 = new Date(listDates[6]);
+const totalSeconds = (date1 - dateNow) / 1000;
+const daysLeft = Math.floor(totalSeconds / (60 * 60 * 24));
+console.log(daysLeft);
+
+/**
+ * Hover effect
+ *
  */
 const timesEl = document.querySelectorAll(".time__wrapper");
-let index = 0;
+const containerEl = document.querySelector(".container");
 
-const btnLeft = document.getElementById("left");
-const btnRight = document.getElementById("right");
+timesEl.forEach((timeEl) => {
+  timeEl.addEventListener("mouseenter", () => {
+    containerEl.classList.remove("initial");
+    const playEl = timeEl.querySelector("#play");
 
-btnLeft.addEventListener("click", () => {
-  if (index === 0) {
-    return;
-  }
-  index--;
-  console.log(timesEl[index]);
-  timesEl[index].scrollIntoView({ behavior: "smooth", block: "center" });
+    console.log(timeEl);
+    timeEl.style.opacity = "1";
+    playEl.style.opacity = "1";
+  });
 });
+timesEl.forEach((timeEl) => {
+  timeEl.addEventListener("mouseleave", () => {
+    const playEl = timeEl.querySelector("#play");
 
-btnRight.addEventListener("click", () => {
-  if (index === timesEl.length - 1) {
-    return;
-  }
-  index++;
-  console.log(timesEl[index]);
-  timesEl[index].scrollIntoView({ behavior: "smooth", block: "center" });
+    timeEl.style.opacity = "0.15";
+    playEl.style.opacity = "0.15";
+  });
 });
 
 /**
