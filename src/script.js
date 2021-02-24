@@ -7,6 +7,8 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 import { GlitchPass } from "three/examples/jsm/postprocessing/GlitchPass.js";
 import * as dat from "dat.gui";
 import { TextureLoader } from "three";
+import fragment from "./shaders/fragment.glsl";
+import vertex from "./shaders/vertex.glsl";
 
 /**
  * Countdown
@@ -34,30 +36,30 @@ console.log(daysLeft);
 const timesEl = document.querySelectorAll(".time__wrapper");
 const containerEl = document.querySelector(".container");
 
-timesEl.forEach((timeEl) => {
-  timeEl.addEventListener("mouseenter", () => {
-    containerEl.classList.remove("initial");
-    const playEl = timeEl.querySelector("#play");
+// timesEl.forEach((timeEl) => {
+//   timeEl.addEventListener("mouseenter", () => {
+//     containerEl.classList.remove("initial");
+//     const playEl = timeEl.querySelector("#play");
 
-    console.log(timeEl);
-    timeEl.style.opacity = "1";
-    playEl.style.opacity = "1";
-  });
-});
-timesEl.forEach((timeEl) => {
-  timeEl.addEventListener("mouseleave", () => {
-    const playEl = timeEl.querySelector("#play");
+//     console.log(timeEl);
+//     timeEl.style.opacity = "1";
+//     playEl.style.opacity = "1";
+//   });
+// });
+// timesEl.forEach((timeEl) => {
+//   timeEl.addEventListener("mouseleave", () => {
+//     const playEl = timeEl.querySelector("#play");
 
-    timeEl.style.opacity = "0.15";
-    playEl.style.opacity = "0.15";
-  });
-});
+//     timeEl.style.opacity = "0.15";
+//     playEl.style.opacity = "0.15";
+//   });
+// });
 
 /**
  * Debug
  */
 const gui = new dat.GUI({ width: 400 });
-gui.hide();
+// gui.hide();
 
 const debugObject = {};
 
@@ -85,15 +87,17 @@ const triangleRoughnessTexture = textureLoader.load("/textures/3/roughness.jpg")
 /**
  * Parameters
  */
+
+const colors = ["#93063d", "#a70f17", "#ed008f", "#f79292", "#ffa520", "#ffc31e", "#00ffc7", "#031c91", "#282557"];
+
 const parameters = {
   radiusTriangle: 1,
   heightTriangle: 1.788,
   radialSegmentsTriangle: 3,
   colorPointLight: "#ffffff",
   colorPointLight2: "#99a0ff",
+  colorTriangle: "#fff",
 };
-
-const colors = ["#fc65dc", "#7281b3", "#d1a94b", "red", "blue", "green", "red", "blue", "green"];
 
 /**
  * Lights
@@ -114,11 +118,11 @@ const ambientLight = new THREE.AmbientLight(0x404040);
 
 // Point Light
 const colorPointLight = new THREE.Color(parameters.colorPointLight);
-const pointLight = new THREE.PointLight(colorPointLight, 0.8, 15);
-pointLight.position.set(2, 0, 1);
+const pointLight = new THREE.PointLight(colorPointLight, 2, 15);
+// pointLight.position.set(2, 0, 1);
 
-// const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1);
-// scene.add(pointLightHelper);
+const pointLightHelper = new THREE.PointLightHelper(pointLight, 0.1);
+scene.add(pointLightHelper);
 
 scene.add(pointLight);
 
@@ -146,15 +150,11 @@ const createTriangle = () => {
     scene.remove(triangle);
   }
 
-  geometry = new THREE.ConeGeometry(
-    parameters.radiusTriangle,
-    parameters.heightTriangle,
-    parameters.radialSegmentsTriangle
-  );
+  geometry = new THREE.ConeGeometry(parameters.radiusTriangle, parameters.heightTriangle, 100, 100);
 
   material = new THREE.MeshStandardMaterial({
     // map: triangleColorTexture,
-    transparent: true,
+    // transparent: true,
     // alphaMap: triangleAlphaTexture,
     // aoMap: triangleAmbientOcclusionTexture,
     // displacementMap: triangleHeightTexture,
@@ -163,8 +163,16 @@ const createTriangle = () => {
     // metalnessMap: triangleMetalnessTexture,
   });
 
-  gui.add(material, "roughness").min(0).max(1).step(0.001);
-  gui.add(material, "metalness").min(0).max(1).step(0.001);
+  // material = new THREE.ShaderMaterial({
+  //   vertexShader: vertex,
+  //   fragmentShader: fragment,
+  // });
+
+  material.wireframe = false;
+  material.color = new THREE.Color(parameters.colorTriangle);
+
+  // gui.add(material, "roughness").min(0).max(1).step(0.001);
+  // gui.add(material, "metalness").min(0).max(1).step(0.001);
 
   triangle = new THREE.Mesh(geometry, material);
   triangle.rotation.y = 1;
@@ -174,10 +182,11 @@ const createTriangle = () => {
 
 createTriangle();
 
-gui.add(parameters, "radiusTriangle").min(1).max(10).step(0.001).onFinishChange(createTriangle);
-gui.add(parameters, "heightTriangle").min(1).max(10).step(0.001).onFinishChange(createTriangle);
-gui.add(parameters, "radialSegmentsTriangle").min(1).max(10).step(1).onFinishChange(createTriangle);
-gui.add(material, "wireframe");
+// gui.add(parameters, "radiusTriangle").min(1).max(10).step(0.001).onFinishChange(createTriangle);
+// gui.add(parameters, "heightTriangle").min(1).max(10).step(0.001).onFinishChange(createTriangle);
+// gui.add(parameters, "radialSegmentsTriangle").min(1).max(10).step(1).onFinishChange(createTriangle);
+gui.add(material, "wireframe").onFinishChange(createTriangle);
+gui.addColor(parameters, "colorTriangle").onFinishChange(createTriangle);
 
 // Floor
 const floor = new THREE.Mesh(
@@ -354,10 +363,12 @@ controls.enableDamping = true;
  */
 const renderer = new THREE.WebGLRenderer({
   canvas: canvas,
+  antialias: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setClearColor("#030303");
+renderer.an;
 
 /**
  * Post Processing
@@ -373,21 +384,21 @@ const renderPass = new RenderPass(scene, camera);
 effectComposer.addPass(renderPass);
 
 // Unreal bloom pass
-const unrealBloomPass = new UnrealBloomPass();
-unrealBloomPass.threshold = 0;
-unrealBloomPass.strength = 0.4;
-unrealBloomPass.radius = 1;
-effectComposer.addPass(unrealBloomPass);
+// const unrealBloomPass = new UnrealBloomPass();
+// unrealBloomPass.threshold = 0;
+// unrealBloomPass.strength = 0.4;
+// unrealBloomPass.radius = 1;
+// effectComposer.addPass(unrealBloomPass);
 
-gui.add(unrealBloomPass, "threshold").min(0).max(1).step(0.1);
-gui.add(unrealBloomPass, "strength").min(0).max(3).step(0.1);
-gui.add(unrealBloomPass, "radius").min(0).max(1).step(0.1);
+// gui.add(unrealBloomPass, "threshold").min(0).max(1).step(0.1);
+// gui.add(unrealBloomPass, "strength").min(0).max(3).step(0.1);
+// gui.add(unrealBloomPass, "radius").min(0).max(1).step(0.1);
 
 // Glitch Pass
-const glitchPass = new GlitchPass();
-glitchPass.enabled = false;
-glitchPass.goWild = true;
-effectComposer.addPass(glitchPass);
+// const glitchPass = new GlitchPass();
+// glitchPass.enabled = false;
+// glitchPass.goWild = true;
+// effectComposer.addPass(glitchPass);
 
 /**
  * Animate
@@ -398,8 +409,8 @@ const tick = () => {
   const elapsedTime = clock.getElapsedTime();
 
   // Animate light
-  pointLight.position.set(Math.sin(elapsedTime * 0.05) * 2, 2, Math.abs(Math.cos(elapsedTime * 0.15)) * 2);
-  pointLight2.position.set(2, Math.sin(elapsedTime * 0.05) * 5 + 15, Math.cos(elapsedTime * 0.2) * 20 - 40);
+  pointLight.position.set(Math.sin(elapsedTime * 0.05), 2, Math.abs(Math.cos(elapsedTime * 0.15)));
+  // pointLight2.position.set(2, Math.sin(elapsedTime * 0.05) * 5 + 15, Math.cos(elapsedTime * 0.2) * 20 - 40);
   // ambientLight.intensity = Math.sin(elapsedTime * 0.2);
 
   // Animate camera

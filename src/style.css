@@ -15,12 +15,6 @@ body {
   outline: none;
 }
 
-/* Mode Test */
-/* .time__wrapper,
-.time__wrapper > * {
-  display: none;
-} */
-
 .container {
   position: absolute;
   top: 20vh;
@@ -40,11 +34,6 @@ body {
   transition: 0.3s;
   z-index: 3;
   border: 1px solid #fff;
-  /* box-shadow: 2px 2px 5px 0px #ffffff; */
-}
-
-.selector:hover {
-  opacity: 1;
 }
 
 .time__wrapper {
@@ -59,8 +48,17 @@ body {
   transition: 0.25s;
 }
 
-.initial .time__wrapper {
-  opacity: 0.8;
+.time__wrapper:hover {
+  opacity: 1;
+}
+
+.time__wrapper:hover #placeholder {
+  transform: translateY(100%);
+  opacity: 0;
+}
+.time__wrapper:hover #play {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .hour {
@@ -70,25 +68,38 @@ body {
   margin-right: 64px;
 }
 
-#play {
-  opacity: 0.1;
+.info {
+  position: relative;
+}
+
+#placeholder {
   font-weight: 300;
   display: block;
   color: white;
   text-decoration: none;
-  transition: opacity 0.5s;
+  transition: 0.3s;
 }
 
-/* #days-left {
-  color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  transform: translateY(-50%);
+#play {
   opacity: 0;
-  transition: opacity 0.5s;
-  font-size: 16px;
-} */
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-weight: 300;
+  display: block;
+  color: white;
+  text-decoration: none;
+  transform: translateY(-100%);
+  transition: 0.3s;
+}
+
+.date-play {
+  font-size: 18px;
+  color: gray !important;
+}
+
+/* Others */
 
 button {
   display: none;
@@ -100,22 +111,6 @@ button {
   border: 0;
   cursor: pointer;
   outline: 0;
-}
-
-.arrow {
-  width: 17px;
-}
-
-#left {
-  left: 30px;
-}
-
-#left img {
-  transform: rotate(180deg);
-}
-
-#right {
-  right: 30px;
 }
 
 .join {
